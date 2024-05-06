@@ -6,13 +6,10 @@ export const criarUsuario = async (req: Request, res: Response) => {
     try {
         const {
             cpf,
-            id_usuario,
             telefone,
             email,
             data_nascimento,
-            codigo_indicacao,
             nome_completo,
-            nome_plano,
             logradouro,
             numero,
             complemento
@@ -20,13 +17,10 @@ export const criarUsuario = async (req: Request, res: Response) => {
 
         await knex('usuario').insert({
             cpf,
-            id_usuario,
             telefone,
             email,
             data_nascimento,
-            codigo_indicacao,
             nome_completo,
-            nome_plano,
             logradouro,
             numero,
             complemento

@@ -2,7 +2,7 @@
   "name": "squad-10-exmed",
   "version": "1.0.0",
   "description": "Um sistema que facilite a visualização dos serviços oferecidos e ajude a garantir a fidelidade dos clientes atuais ao mesmo tempo que alcança novos de uma forma atrativa, em que os usuários vejam benefícios claros, assim ampliando a venda da solução.",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "dev": "ts-node-dev ./src/app.ts",
     "start": "tsc && node ./build/app.js",
@@ -23,6 +23,7 @@
     "express": "^4.19.2",
     "knex": "^3.1.0",
     "mysql": "^2.18.1",
+    "mysql2": "^3.9.7",
     "ts-node": "^10.9.2"
   }
 }
