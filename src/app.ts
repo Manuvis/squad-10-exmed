@@ -7,10 +7,10 @@ const app: Express = express();
 app.use(express.json());
 app.use(cors());
 
-// Roteamento correto dos endpoints
+
 app.post('/usuario', criarUsuario);
 app.get('/usuarios', listarUsuarios);
-app.get('/usuario/:cpf', obterUsuarioPorCPF); // Você precisa importar 'obterUsuarioPorCPF' do controlador
+app.get('/usuario/:cpf', obterUsuarioPorCPF); 
 app.put('/usuario/:cpf', atualizarUsuarioPorCPF);
 app.delete('/usuario/:cpf', excluirUsuarioPorCPF);
 

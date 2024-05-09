@@ -21,15 +21,13 @@ export const criarUsuario = async (req: Request, res: Response) => {
 
         let codigoIndicacaoDeOrigem = codigo_indicacao_origem;
 
-        if (codigo_indicacao_origem) {
-
-            const indicacaoOrigem = await knex('indicacao').where('cpf_usuario', codigo_indicacao_origem).first();
+        const indicacaoOrigem = await knex('indicacao').where('codigo_indicacao_por_cpf', codigo_indicacao_origem).first();
             if (indicacaoOrigem) {
                 codigoIndicacaoDeOrigem = indicacaoOrigem.codigo_indicacao_por_cpf;
             } else {
                 return res.status(400).json({ message: 'Código de indicação de origem inválido.' });
             }
-        }
+        
 
         await knex.transaction(async (trx) => {
             await trx('usuario').insert({
