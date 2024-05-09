@@ -86,7 +86,7 @@ export const obterUsuarioPorCPF = async (req: Request, res: Response) => {
 export const atualizarUsuarioPorCPF = async (req: Request, res: Response) => {
     try {
         const { cpf } = req.params;
-        const dadosAtualizacao = req.body[0]; // Primeiro objeto do array
+        const dadosAtualizacao = req.body[0]; 
 
         const {
             telefone,
@@ -119,19 +119,15 @@ export const atualizarUsuarioPorCPF = async (req: Request, res: Response) => {
 export const excluirUsuarioPorCPF = async (req: Request, res: Response) => {
     try {
         const { cpf } = req.params;
-
         
         const usuarioExistente = await knex('usuario').where('cpf', cpf).first();
         if (!usuarioExistente) {
             return res.status(404).json({ message: 'Usuário não encontrado.' });
         }
-
-        
+    
         await knex('indicacao').where('cpf_usuario', cpf).del();
 
-       
         await knex('usuario').where('cpf', cpf).del();
-
         
         res.status(200).json({ message: 'Usuário excluído com sucesso.' });
     } catch (error) {
