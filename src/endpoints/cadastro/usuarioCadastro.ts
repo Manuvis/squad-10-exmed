@@ -1,11 +1,5 @@
 import express from 'express';
-import {
-    criarUsuario,
-    listarUsuarios,
-    obterUsuarioPorCPF,
-    atualizarUsuarioPorCPF,
-    excluirUsuarioPorCPF
-} from '../../controllers/usuarioController';
+import { criarUsuario, listarUsuarios, atualizarUsuarioPorID, excluirUsuarioPorID, obterUsuarioPorID } from '../../controllers/usuarioController';
 
 const router = express.Router();
 
@@ -13,10 +7,10 @@ router.post('/usuario', criarUsuario);
 
 router.get('/usuarios', listarUsuarios);
 
-router.get('/usuario/:cpf', obterUsuarioPorCPF);
+router.get('/usuario/:id_usuario', obterUsuarioPorID);
 
-router.put('/usuario/:cpf', atualizarUsuarioPorCPF);
+router.put('/usuario/:id_usuario', atualizarUsuarioPorID);
 
-router.delete('/usuario/:cpf', excluirUsuarioPorCPF);
+router.delete('/usuario/:id_usuario', excluirUsuarioPorID);
 
 export default router;

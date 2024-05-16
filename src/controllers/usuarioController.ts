@@ -18,11 +18,10 @@ export const criarUsuario = async (req: Request, res: Response) => {
             codigo_indicacao_origem 
         } = req.body;
 
-        // Gerar um código de indicação único para o novo usuário
         const codigoIndicacaoPorCpf = uuidv4();
-        const userIdUsuario = uuidv4(); // Gerar um ID único para o usuário
+        const userIdUsuario = uuidv4(); 
 
-        // Verificar se existe um código de indicação de origem
+
         let codigoIndicacaoDeOrigem = codigo_indicacao_origem;
         if (codigo_indicacao_origem) {
             const indicacaoOrigem = await knex('indicacao').where('codigo_indicacao_por_cpf', codigo_indicacao_origem).first();
@@ -34,7 +33,6 @@ export const criarUsuario = async (req: Request, res: Response) => {
         }
 
         await knex.transaction(async (trx) => {
-            // Inserir o novo usuário na tabela de usuário
             await trx('usuario').insert({
                 id_usuario: userIdUsuario,
                 cpf,
@@ -49,14 +47,12 @@ export const criarUsuario = async (req: Request, res: Response) => {
                 codigo_indicacao_origem: codigoIndicacaoDeOrigem
             });
 
-            // Inserir os dados na tabela de indicação
             await trx('indicacao').insert({
                 codigo_indicacao_por_cpf: codigoIndicacaoPorCpf,
                 cpf_usuario: cpf
             });
         });
 
-        // Retornar uma resposta de sucesso com o código de indicação
         res.status(201).json({ message: 'Usuário cadastrado com sucesso.', codigoIndicacaoPorCpf });
     } catch (error) {
         console.error(error);
