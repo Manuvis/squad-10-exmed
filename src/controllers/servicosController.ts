@@ -25,6 +25,5 @@ export const criarServico = async (req: Request, res: Response) => {
     }
 };
 
-
 //Editar Serviço
 //Apagar Serviço

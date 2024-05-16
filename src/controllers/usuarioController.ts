@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { v4 as uuidv4 } from 'uuid';
 import knex from '../connection';
+import { v4 as uuidv4 } from 'uuid';
 
 // Criar Usuário
 export const criarUsuario = async (req: Request, res: Response) => {
@@ -9,6 +9,7 @@ export const criarUsuario = async (req: Request, res: Response) => {
             cpf,
             telefone,
             email,
+            data_nascimento, 
             nome_completo,
             nome_plano,
             logradouro,
@@ -17,23 +18,29 @@ export const criarUsuario = async (req: Request, res: Response) => {
             codigo_indicacao_origem 
         } = req.body;
 
+        // Gerar um código de indicação único para o novo usuário
         const codigoIndicacaoPorCpf = uuidv4();
+        const userIdUsuario = uuidv4(); // Gerar um ID único para o usuário
 
+        // Verificar se existe um código de indicação de origem
         let codigoIndicacaoDeOrigem = codigo_indicacao_origem;
-
-        const indicacaoOrigem = await knex('indicacao').where('codigo_indicacao_por_cpf', codigo_indicacao_origem).first();
+        if (codigo_indicacao_origem) {
+            const indicacaoOrigem = await knex('indicacao').where('codigo_indicacao_por_cpf', codigo_indicacao_origem).first();
             if (indicacaoOrigem) {
                 codigoIndicacaoDeOrigem = indicacaoOrigem.codigo_indicacao_por_cpf;
             } else {
                 return res.status(400).json({ message: 'Código de indicação de origem inválido.' });
             }
-        
+        }
 
         await knex.transaction(async (trx) => {
+            // Inserir o novo usuário na tabela de usuário
             await trx('usuario').insert({
+                id_usuario: userIdUsuario,
                 cpf,
                 telefone,
                 email,
+                data_nascimento, 
                 nome_completo,
                 nome_plano,
                 logradouro,
@@ -42,12 +49,14 @@ export const criarUsuario = async (req: Request, res: Response) => {
                 codigo_indicacao_origem: codigoIndicacaoDeOrigem
             });
 
+            // Inserir os dados na tabela de indicação
             await trx('indicacao').insert({
                 codigo_indicacao_por_cpf: codigoIndicacaoPorCpf,
                 cpf_usuario: cpf
             });
         });
 
+        // Retornar uma resposta de sucesso com o código de indicação
         res.status(201).json({ message: 'Usuário cadastrado com sucesso.', codigoIndicacaoPorCpf });
     } catch (error) {
         console.error(error);
@@ -66,11 +75,11 @@ export const listarUsuarios = async (req: Request, res: Response) => {
     }
 };
 
-// Obter Usuário por CPF
-export const obterUsuarioPorCPF = async (req: Request, res: Response) => {
+// Obter Usuário por ID
+export const obterUsuarioPorID = async (req: Request, res: Response) => {
     try {
-        const { cpf } = req.params;
-        const usuario = await knex('usuario').where('cpf', cpf).first();
+        const { id_usuario } = req.params;
+        const usuario = await knex('usuario').where('id_usuario', id_usuario).first();
         if (usuario) {
             res.status(200).json(usuario);
         } else {
@@ -82,12 +91,10 @@ export const obterUsuarioPorCPF = async (req: Request, res: Response) => {
     }
 };
 
-// Atualizar Usuário por CPF
-export const atualizarUsuarioPorCPF = async (req: Request, res: Response) => {
+// Atualizar Usuário por ID
+export const atualizarUsuarioPorID = async (req: Request, res: Response) => {
     try {
-        const { cpf } = req.params;
-        const dadosAtualizacao = req.body[0]; 
-
+        const { id_usuario } = req.params;
         const {
             telefone,
             email,
@@ -96,9 +103,9 @@ export const atualizarUsuarioPorCPF = async (req: Request, res: Response) => {
             logradouro,
             numero,
             complemento
-        } = dadosAtualizacao;
+        } = req.body;
 
-        await knex('usuario').where('cpf', cpf).update({
+        await knex('usuario').where('id_usuario', id_usuario).update({
             telefone,
             email,
             nome_completo,
@@ -115,24 +122,23 @@ export const atualizarUsuarioPorCPF = async (req: Request, res: Response) => {
     }
 };
 
-// Excluir Usuário por CPF
-export const excluirUsuarioPorCPF = async (req: Request, res: Response) => {
+// Excluir Usuário por ID
+export const excluirUsuarioPorID = async (req: Request, res: Response) => {
     try {
-        const { cpf } = req.params;
-        
-        const usuarioExistente = await knex('usuario').where('cpf', cpf).first();
+        const { id_usuario } = req.params;
+
+        const usuarioExistente = await knex('usuario').where('id_usuario', id_usuario).first();
         if (!usuarioExistente) {
             return res.status(404).json({ message: 'Usuário não encontrado.' });
         }
-    
-        await knex('indicacao').where('cpf_usuario', cpf).del();
 
-        await knex('usuario').where('cpf', cpf).del();
-        
+        await knex('indicacao').where('cpf_usuario', usuarioExistente.cpf).del();
+
+        await knex('usuario').where('id_usuario', id_usuario).del();
+
         res.status(200).json({ message: 'Usuário excluído com sucesso.' });
     } catch (error) {
         console.error(error);
         res.status(500).send('Ocorreu um erro inesperado ao excluir o usuário.');
     }
 };
-
