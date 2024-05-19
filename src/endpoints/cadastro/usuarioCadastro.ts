@@ -1,26 +1,19 @@
 import express from 'express';
-import {
-    criarUsuario,
-    listarUsuarios,
-    obterUsuarioPorCPF,
-    atualizarUsuarioPorCPF,
-    excluirUsuarioPorCPF
-} from '../../controllers/usuarioController';
+import { criarUsuario, listarUsuarios, atualizarUsuarioPorID, atualizarPlanoUsuario, excluirUsuarioPorID, obterUsuarioPorID } from '../../controllers/usuarioController';
 
 const router = express.Router();
 
 router.post('/usuario', criarUsuario);
 
-
 router.get('/usuarios', listarUsuarios);
 
+router.get('/usuario/:id_usuario', obterUsuarioPorID);
 
-router.get('/usuario/:cpf', obterUsuarioPorCPF);
+router.put('/usuario/:id_usuario', atualizarUsuarioPorID);
 
+router.put('/usuario/:id_usuario/plano',atualizarPlanoUsuario);
 
-router.put('/usuario/:cpf', atualizarUsuarioPorCPF);
+router.delete('/usuario/:id_usuario', excluirUsuarioPorID);
 
-
-router.delete('/usuario/:cpf', excluirUsuarioPorCPF);
 
 export default router;
