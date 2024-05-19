@@ -9,34 +9,43 @@ export const criarUsuario = async (req: Request, res: Response) => {
             cpf,
             telefone,
             email,
-            data_nascimento, 
+            data_nascimento,
             nome_completo,
             nome_plano,
             logradouro,
             numero,
             complemento,
-            codigo_indicacao_origem 
+            codigo_indicacao_origem
         } = req.body;
 
         // Gera um novo código de indicação por CPF e um novo ID de usuário
         const codigoIndicacaoPorCpf = uuidv4();
-        const userIdUsuario = uuidv4(); 
+        const userIdUsuario = uuidv4();
 
         // Verifica o código de indicação de origem se fornecido
         let codigoIndicacaoDeOrigem = codigo_indicacao_origem;
+        let saldoInicial = 0;
+
         if (codigo_indicacao_origem) {
             const indicacaoOrigem = await knex('indicacao').where('codigo_indicacao_por_cpf', codigo_indicacao_origem).first();
             if (indicacaoOrigem) {
                 codigoIndicacaoDeOrigem = indicacaoOrigem.codigo_indicacao_por_cpf;
+                saldoInicial += 5; // Adiciona saldo de indicação
             } else {
                 return res.status(400).json({ message: 'Código de indicação de origem inválido.' });
             }
         }
 
-        // Busca o nome do plano a partir do id_servico fornecido
-        const servico = await knex('servicos').where('id_servico', nome_plano).first();
-        if (!servico) {
-            return res.status(400).json({ message: 'Serviço não encontrado para o id_servico fornecido.' });
+        // Busca o nome do plano a partir do id_servico fornecido, se fornecido
+        let servicoNomePlano = null;
+
+        if (nome_plano) {
+            const servico = await knex('servicos').where('id_servico', nome_plano).first();
+            if (!servico) {
+                return res.status(400).json({ message: 'Serviço não encontrado para o id_servico fornecido.' });
+            }
+            servicoNomePlano = servico.nome_plano;
+            saldoInicial += 10; // Adiciona saldo de plano
         }
 
         // Inicia a transação para inserir o usuário e a indicação
@@ -46,13 +55,14 @@ export const criarUsuario = async (req: Request, res: Response) => {
                 cpf,
                 telefone,
                 email,
-                data_nascimento, 
+                data_nascimento,
                 nome_completo,
-                nome_plano: servico.nome_plano, // Usa o nome do plano buscado
+                nome_plano: servicoNomePlano,
                 logradouro,
                 numero,
                 complemento,
-                codigo_indicacao_origem: codigoIndicacaoDeOrigem
+                codigo_indicacao_origem: codigoIndicacaoDeOrigem,
+                saldo: saldoInicial // Adiciona o saldo inicial
             });
 
             await trx('indicacao').insert({
@@ -67,6 +77,7 @@ export const criarUsuario = async (req: Request, res: Response) => {
         res.status(500).send('Ocorreu um erro inesperado ao cadastrar o usuário.');
     }
 };
+
 
 // Listar Usuários
 export const listarUsuarios = async (req: Request, res: Response) => {
@@ -124,20 +135,37 @@ export const atualizarUsuarioPorID = async (req: Request, res: Response) => {
     }
 };
 
-//Atualiza Plano Usuário
+// Atualiza Plano Usuário
 export const atualizarPlanoUsuario = async (req: Request, res: Response) => {
     try {
         const { id_usuario } = req.params;
         const { id_servico } = req.body;
 
+        // Verifica se o serviço existe
         const servico = await knex('servicos').where('id_servico', id_servico).first();
         if (!servico) {
             return res.status(400).json({ message: 'Serviço não encontrado para o id_servico fornecido.' });
         }
 
-        await knex('usuario').where('id_usuario', id_usuario).update({
-            nome_plano: servico.nome_plano
-        });
+        // Verifica se o usuário existe
+        const usuario = await knex('usuario').where('id_usuario', id_usuario).first();
+        if (!usuario) {
+            return res.status(400).json({ message: 'Usuário não encontrado.' });
+        }
+
+        // Verifica se o nome_plano do usuário é nulo antes de fazer a atualização
+        if (usuario.nome_plano === null) {
+            // Se o plano atual for nulo, adicionar um saldo inicial de 10
+            await knex('usuario').where('id_usuario', id_usuario).update({
+                nome_plano: servico.nome_plano,
+                saldo: knex.raw('saldo + 10') // Adiciona 10 ao saldo existente
+            });
+        } else {
+            // Se o plano atual não for nulo, apenas atualiza o plano sem alterar o saldo
+            await knex('usuario').where('id_usuario', id_usuario).update({
+                nome_plano: servico.nome_plano
+            });
+        }
 
         res.status(200).json({ message: 'Plano do usuário atualizado com sucesso.' });
     } catch (error) {

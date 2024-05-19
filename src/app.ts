@@ -1,7 +1,9 @@
 import express, { Express } from 'express'
 import cors from 'cors'
 import { criarUsuario, listarUsuarios, atualizarUsuarioPorID, atualizarPlanoUsuario, excluirUsuarioPorID, obterUsuarioPorID } from './controllers/usuarioController';
-import {  criarServico, listarServicos, atualizarServicoPorID, excluirServicoPorID } from './controllers/servicosController';
+import { criarServico, listarServicos, atualizarServicoPorID, excluirServicoPorID } from './controllers/servicosController';
+import { criarBeneficio, listarBeneficios, obterBeneficioPorID, atualizarBeneficioPorID, excluirBeneficioPorID } from './controllers/beneficioController';
+
 
 const app: Express = express();
 
@@ -22,6 +24,12 @@ app.get('/servicos', listarServicos);
 app.put('/servicos/:id_servico', atualizarServicoPorID);
 app.delete('/servicos/:id_servico', excluirServicoPorID);
 
+//Benefícios
+app.post('/beneficio', criarBeneficio);
+app.get('/beneficios', listarBeneficios);
+app.get('/beneficio/:id_beneficio', obterBeneficioPorID);
+app.put('/beneficio/:id_beneficio', atualizarBeneficioPorID);
+app.delete('/beneficio/:id_beneficio', excluirBeneficioPorID);
 
 app.listen(3003, () => {
     console.log("Server is running  in http://localhost:3003")
