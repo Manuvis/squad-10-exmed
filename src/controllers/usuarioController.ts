@@ -18,10 +18,11 @@ export const criarUsuario = async (req: Request, res: Response) => {
             codigo_indicacao_origem 
         } = req.body;
 
+        // Gera um novo código de indicação por CPF e um novo ID de usuário
         const codigoIndicacaoPorCpf = uuidv4();
         const userIdUsuario = uuidv4(); 
 
-
+        // Verifica o código de indicação de origem se fornecido
         let codigoIndicacaoDeOrigem = codigo_indicacao_origem;
         if (codigo_indicacao_origem) {
             const indicacaoOrigem = await knex('indicacao').where('codigo_indicacao_por_cpf', codigo_indicacao_origem).first();
@@ -32,6 +33,13 @@ export const criarUsuario = async (req: Request, res: Response) => {
             }
         }
 
+        // Busca o nome do plano a partir do id_servico fornecido
+        const servico = await knex('servicos').where('id_servico', nome_plano).first();
+        if (!servico) {
+            return res.status(400).json({ message: 'Serviço não encontrado para o id_servico fornecido.' });
+        }
+
+        // Inicia a transação para inserir o usuário e a indicação
         await knex.transaction(async (trx) => {
             await trx('usuario').insert({
                 id_usuario: userIdUsuario,
@@ -40,7 +48,7 @@ export const criarUsuario = async (req: Request, res: Response) => {
                 email,
                 data_nascimento, 
                 nome_completo,
-                nome_plano,
+                nome_plano: servico.nome_plano, // Usa o nome do plano buscado
                 logradouro,
                 numero,
                 complemento,
@@ -95,7 +103,6 @@ export const atualizarUsuarioPorID = async (req: Request, res: Response) => {
             telefone,
             email,
             nome_completo,
-            nome_plano,
             logradouro,
             numero,
             complemento
@@ -105,7 +112,6 @@ export const atualizarUsuarioPorID = async (req: Request, res: Response) => {
             telefone,
             email,
             nome_completo,
-            nome_plano,
             logradouro,
             numero,
             complemento
@@ -117,6 +123,29 @@ export const atualizarUsuarioPorID = async (req: Request, res: Response) => {
         res.status(500).send('Ocorreu um erro inesperado ao atualizar o usuário.');
     }
 };
+
+//Atualiza Plano Usuário
+export const atualizarPlanoUsuario = async (req: Request, res: Response) => {
+    try {
+        const { id_usuario } = req.params;
+        const { id_servico } = req.body;
+
+        const servico = await knex('servicos').where('id_servico', id_servico).first();
+        if (!servico) {
+            return res.status(400).json({ message: 'Serviço não encontrado para o id_servico fornecido.' });
+        }
+
+        await knex('usuario').where('id_usuario', id_usuario).update({
+            nome_plano: servico.nome_plano
+        });
+
+        res.status(200).json({ message: 'Plano do usuário atualizado com sucesso.' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Ocorreu um erro inesperado ao atualizar o plano do usuário.');
+    }
+};
+
 
 // Excluir Usuário por ID
 export const excluirUsuarioPorID = async (req: Request, res: Response) => {
