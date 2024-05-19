@@ -41,13 +41,11 @@ export const atualizarServicoPorID = async (req: Request, res: Response) => {
         const { id_servico } = req.params;
         const { nome_plano, descricao, valor_do_servico } = req.body;
 
-
         await knex('servicos').where('id_servico', id_servico).update({
             nome_plano,
             descricao,
             valor_do_servico
         });
-    
 
         res.status(200).send('Serviço atualizado com sucesso.');
     } catch (error) {

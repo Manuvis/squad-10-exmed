@@ -4,7 +4,8 @@ import {
     listarBeneficios,
     obterBeneficioPorID,
     atualizarBeneficioPorID,
-    excluirBeneficioPorID
+    excluirBeneficioPorID,
+    contratarBeneficio
 } from '../../controllers/beneficioController';
 
 const router = express.Router();
@@ -15,6 +16,7 @@ router.get('/beneficios', listarBeneficios);
 router.get('/beneficio/:id_beneficio', obterBeneficioPorID);
 router.put('/beneficio/:id_beneficio', atualizarBeneficioPorID);
 router.delete('/beneficio/:id_beneficio', excluirBeneficioPorID);
+router.post('/contratar-beneficio', contratarBeneficio);
 
 
 export default router;
