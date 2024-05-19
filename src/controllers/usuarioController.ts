@@ -2,6 +2,29 @@ import { Request, Response } from 'express';
 import knex from '../connection';
 import { v4 as uuidv4 } from 'uuid';
 
+
+// Método para incrementar o saldo do usuário indicado
+const incrementarSaldoUsuarioIndicacao = async (codigoIndicacao: string) => {
+    try {
+        // Localiza o usuário indicador pelo código de indicação
+        const indicacao = await knex('indicacao').where('codigo_indicacao_por_cpf', codigoIndicacao).first();
+        if (!indicacao) {
+            console.log('Código de indicação inválido.');
+            return;
+        }
+
+        // Obtém o CPF do usuário indicador
+        const cpfUsuarioIndicador = indicacao.cpf_usuario;
+
+        // Incrementa o saldo do usuário indicador
+        await knex('usuario').where('cpf', cpfUsuarioIndicador).increment('saldo', 1);
+        console.log('Saldo do usuário indicador incrementado com sucesso.');
+    } catch (error) {
+        console.error('Ocorreu um erro ao incrementar o saldo do usuário indicador:', error);
+    }
+};
+
+
 // Criar Usuário
 export const criarUsuario = async (req: Request, res: Response) => {
     try {
@@ -26,7 +49,9 @@ export const criarUsuario = async (req: Request, res: Response) => {
         let codigoIndicacaoDeOrigem = codigo_indicacao_origem;
         let saldoInicial = 0;
 
+
         if (codigo_indicacao_origem) {
+            await incrementarSaldoUsuarioIndicacao(codigo_indicacao_origem);
             const indicacaoOrigem = await knex('indicacao').where('codigo_indicacao_por_cpf', codigo_indicacao_origem).first();
             if (indicacaoOrigem) {
                 codigoIndicacaoDeOrigem = indicacaoOrigem.codigo_indicacao_por_cpf;
@@ -77,6 +102,8 @@ export const criarUsuario = async (req: Request, res: Response) => {
         res.status(500).send('Ocorreu um erro inesperado ao cadastrar o usuário.');
     }
 };
+
+
 
 
 // Listar Usuários
