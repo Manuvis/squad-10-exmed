@@ -1,17 +1,18 @@
 {
   "compilerOptions": {
     "target": "es2016",                                 
-    /* Modules */
     "module": "commonjs",                               
     "rootDir": "./src",                        
     "sourceMap": true,                                
-    "outDir": "./build",                                   
+    "outDir": "./build",                                 
     "removeComments": true,                          
 	  "esModuleInterop": true,                            
     "forceConsistentCasingInFileNames": true,           
-    /* Type Checking */
     "strict": true,                                  
     "noImplicitAny": true,                           
-    "skipLibCheck": true      
-  }
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "node"
+  },
+  "include": ["src/**/*"]
 }
