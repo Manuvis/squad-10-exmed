@@ -5,10 +5,9 @@ import { v4 as uuidv4 } from 'uuid';
 // Criar Benefício
 export const criarBeneficio = async (req: Request, res: Response) => {
     try {
-        const { id_usuario, valor_beneficio, nome_beneficio } = req.body;
+        const {valor_beneficio, nome_beneficio } = req.body;
 
         await knex('beneficio').insert({
-            id_usuario,
             valor_beneficio,
             nome_beneficio
         });

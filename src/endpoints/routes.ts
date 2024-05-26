@@ -20,8 +20,8 @@ router.put('/servicos/:id_servico', atualizarServicoPorID);
 router.delete('/servicos/:id_servico', excluirServicoPorID);
 
 //Benefícios
-router.post('/beneficios', criarBeneficio);
-router.get('/beneficios', listarBeneficios);
+router.post('/beneficio', criarBeneficio);
+router.get('/beneficio', listarBeneficios);
 router.get('/beneficio/:id_beneficio', obterBeneficioPorID);
 router.put('/beneficio/:id_beneficio', atualizarBeneficioPorID);
 router.delete('/beneficio/:id_beneficio', excluirBeneficioPorID);

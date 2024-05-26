@@ -14,10 +14,6 @@
         {
             "url": "http://localhost:3003/v1",
             "description": "API de test"
-        },
-        {
-            "url": "https://squad-10-exmed.vercel.app/",
-            "description": "API de produção"
         }
     ],
     "paths": {
@@ -427,7 +423,7 @@
                 ]
             }
         },
-        "/beneficios": {
+        "/beneficio": {
             "get": {
                 "tags": [
                     "Benefícios"
