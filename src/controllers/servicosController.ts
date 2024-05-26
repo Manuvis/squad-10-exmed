@@ -54,7 +54,6 @@ export const atualizarServicoPorID = async (req: Request, res: Response) => {
     }
 };
 
-
 // Excluir Serviço 
 export const excluirServicoPorID = async (req: Request, res: Response) => {
     try {

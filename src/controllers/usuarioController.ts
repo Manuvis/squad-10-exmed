@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import knex from '../connection';
 import { v4 as uuidv4 } from 'uuid';
 
-
 const incrementarSaldoUsuarioIndicacao = async (codigoIndicacao: string) => {
     try {
         const indicacao = await knex('indicacao').where('codigo_indicacao_por_cpf', codigoIndicacao).first();

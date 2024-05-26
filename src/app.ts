@@ -2,7 +2,7 @@ import express, { Express } from 'express';
 import cors from 'cors';
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./swagger.json"
-import { router } from "../src/endpoints/routes";
+import { router } from "./endpoints/routes";
 
 const app: Express = express();
 
@@ -16,3 +16,5 @@ app.use("/v1", router);
 app.listen(3003, () => {
     console.log("Server is running  in http://localhost:3003")
 })
+
+export default app;
