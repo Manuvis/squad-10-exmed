@@ -158,12 +158,12 @@ export const atualizarPlanoUsuario = async (req: Request, res: Response) => {
 
         const servico = await knex('servicos').where('id_servico', id_servico).first();
         if (!servico) {
-            return res.status(400).json({ message: 'Serviço não encontrado para o id_servico fornecido.' });
+            return res.status(404).json({ message: 'Serviço não encontrado para o id_servico fornecido.' });
         }
 
         const usuario = await knex('usuario').where('id_usuario', id_usuario).first();
         if (!usuario) {
-            return res.status(400).json({ message: 'Usuário não encontrado.' });
+            return res.status(404).json({ message: 'Usuário não encontrado.' });
         }
 
         if (usuario.nome_plano === null) {

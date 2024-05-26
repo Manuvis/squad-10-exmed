@@ -17,7 +17,7 @@ export const criarServico = async (req: Request, res: Response) => {
             valor_do_servico
         });
 
-        res.status(201).json({ message: 'Serviço criado com sucesso.' });
+        res.status(200).json({ message: 'Serviço criado com sucesso.' });
     } catch (error) {
         console.error(error);
         res.status(500).send('Ocorreu um erro inesperado ao criar o serviço.');

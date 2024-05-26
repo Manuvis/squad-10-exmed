@@ -1,0 +1,725 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API do Sistema de Indicações da Exmed",
+        "summary": "Realizar a divulgação dos planos da Exmed",
+        "description": "Um sistema que facilita a visualização dos serviços oferecidos e ajuda a garantir a fidelidade dos clientes atuais ao mesmo tempo que alcança novos de uma forma atrativa, em que os usuários vejam benefícios claros, assim ampliando a venda da solução.",
+        "contact": {
+            "url": "https://github.com/Manuvis/squad-10-exmed",
+            "email": "manuellafigueiredojatoba@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3003/v1",
+            "description": "API de test"
+        }
+    ],
+    "paths": {
+        "/usuarios": {
+            "post": {
+                "tags": [
+                    "Usuário"
+                ],
+                "summary": "Cadastro do usuário",
+                "description": "Cadastra o usuário na plataforma da Exmed",
+                "operationId": "postUsuario",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Usuario"
+                            },
+                            "examples": {
+                                "usuario": {
+                                    "value": {
+                                        "cpf": "765.432.109-25",
+                                        "telefone": "(41) 99999-9999",
+                                        "email": "renee@gmail.com",
+                                        "data_nascimento": "1970-09-23",
+                                        "codigo_indicacao_origem": "f93cd4d9-8f40-4579-8150-46ab4d5ab1e3",
+                                        "nome_completo": "Helena Oliveira",
+                                        "nome_plano": 2,
+                                        "logradouro": "Estrada do Encanamento",
+                                        "numero": 123,
+                                        "complemento": "Casa F"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Código de indicação de origem inválido."
+                    },
+                    "404": {
+                        "description": "Serviço não encontrado para o id_servico fornecido."
+                    },
+                    "201": {
+                        "description": "Usuário cadastrado com sucesso.",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "500": {
+                        "description": "Ocorreu um erro inesperado ao cadastrar o usuário."
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Usuário"
+                ],
+                "summary": "Lista todos os usuários",
+                "description": "Lista todos os usuários cadastrados na plataforma da Exmed",
+                "operationId": "getUsuario",
+                "responses": {
+                    "200": {
+                        "description": "Retorna usuários.",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "500": {
+                        "description": "Ocorreu um erro inesperado ao listar o usuário."
+                    }
+                }
+            }
+        },
+        "/usuarios/{id_usuario}": {
+            "get": {
+                "tags": [
+                    "Usuário"
+                ],
+                "summary": "Obter usuários por Id",
+                "description": "Obter usuários por Id cadastrados na plataforma da Exmed",
+                "operationId": "getUsuarioPorId",
+                "responses": {
+                    "200": {
+                        "description": "Retorna usuário",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado."
+                    },
+                    "500": {
+                        "description": "Ocorreu um erro inesperado ao listar o usuário."
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id_usuario",
+                        "in": "path",
+                        "description": "Retorna Usuário pelo Id",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Usuário"
+                ],
+                "summary": "Edita/Atualiza usuário pelo Id",
+                "description": "Edita/Atualiza usuário pelo Id cadastrado na plataforma da Exmed",
+                "operationId": "putUsuarioPeloId",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EditaUsuario"
+                            },
+                            "examples": {
+                                "usuario": {
+                                    "value": {
+                                        "telefone": "(41) 99999-9999",
+                                        "email": "renee@gmail.com",
+                                        "nome_completo": "Helena Oliveira",
+                                        "logradouro": "Estrada do Encanamento",
+                                        "numero": 123,
+                                        "complemento": "Casa F"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Usuário atualizado com sucesso.",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "500": {
+                        "description": "Ocorreu um erro inesperado ao atualizar o usuário."
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id_usuario",
+                        "in": "path",
+                        "description": "Edita/Atualiza Usuário pelo Id",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Usuário"
+                ],
+                "summary": "Deleta usuário pelo Id",
+                "description": "Deleta usuário pelo Id cadastrado na plataforma da Exmed",
+                "operationId": "deleteUsuarioPeloId",
+                "responses": {
+                    "200": {
+                        "description": "Usuário excluído com sucesso.",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado."
+                    },
+                    "500": {
+                        "description": "Ocorreu um erro inesperado ao excluir o usuário."
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id_usuario",
+                        "in": "path",
+                        "description": "Deleta Usuário pelo Id",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "/usuario/{id_usuario}/plano": {
+            "put": {
+                "tags": [
+                    "Usuário"
+                ],
+                "summary": "Atualiza o plano do usuário, pelo seu Id do usuário",
+                "description": "Atualizar o plano do usuário cadastrado na plataforma da Exmed",
+                "operationId": "putPlanoDoUsuarioPeloId",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AtualizarPlanoUsuario"
+                            },
+                            "examples": {
+                                "usuario": {
+                                    "value": {
+                                        "id_servico": 1
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Plano do usuário atualizado com sucesso.",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "400": {
+                        "description": "Serviço não encontrado para o id_servico fornecido."
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado."
+                    },
+                    "500": {
+                        "description": "Ocorreu um erro inesperado ao atualizar o plano do usuário."
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id_usuario",
+                        "in": "path",
+                        "description": "Atualiza Plano do Usuário pelo Id",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "/servicos": {
+            "get": {
+                "tags": [
+                    "Serviços"
+                ],
+                "summary": "Obter serviços",
+                "description": "Obter serviços cadastrados na plataforma da Exmed",
+                "operationId": "getServicos",
+                "responses": {
+                    "200": {
+                        "description": "Retorna serviços",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "500": {
+                        "description": "Ocorreu um erro inesperado ao listar os serviços."
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Serviços"
+                ],
+                "summary": "Adiciona serviço",
+                "description": "Adiciona serviço na plataforma da Exmed",
+                "operationId": "postServico",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Servico"
+                            },
+                            "examples": {
+                                "serviço": {
+                                    "value": {
+                                        "nome_plano": "Exmed Life",
+                                        "descricao": "Descubra o seguro que protege você com até R$ 200 mil para diárias de internação e cirurgias nos melhores hospitais do Brasil.",
+                                        "valor_do_servico": "80.90"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Serviço criado com sucesso.",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "400": {
+                        "description": "Já existe um serviço cadastrado com esse nome."
+                    },
+                    "500": {
+                        "description": "Ocorreu um erro inesperado ao criar o serviço."
+                    }
+                }
+            }
+        },
+        "/servicos/{id_servico}": {
+            "put": {
+                "tags": [
+                    "Serviços"
+                ],
+                "summary": "Edita serviço pelo Id",
+                "description": "Edita serviço pelo Id cadastrados na plataforma da Exmed",
+                "operationId": "putServicoPeloId",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Servico"
+                            },
+                            "examples": {
+                                "serviço": {
+                                    "value": {
+                                        "nome_plano": "Exmed Life",
+                                        "descricao": "Descubra o seguro que protege você com até R$ 200 mil para diárias de internação e cirurgias nos melhores hospitais do Brasil.",
+                                        "valor_do_servico": "80.90"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Serviço atualizado com sucesso.",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "500": {
+                        "description": "Ocorreu um erro inesperado ao atualizar o serviço."
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id_servico",
+                        "in": "path",
+                        "description": "Edita Serviço pelo Id",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        }
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Serviços"
+                ],
+                "summary": "Deleta serviço pelo Id",
+                "description": "Deleta serviço pelo Id cadastrado na plataforma da Exmed",
+                "operationId": "deleteServicoPeloId",
+                "responses": {
+                    "200": {
+                        "description": "Serviço excluído com sucesso.",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "400": {
+                        "description": "Serviço não encontrado."
+                    },
+                    "500": {
+                        "description": "Ocorreu um erro inesperado ao excluir o serviço."
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id_servico",
+                        "in": "path",
+                        "description": "Deleta Serviço pelo Id",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "/beneficios": {
+            "get": {
+                "tags": [
+                    "Benefícios"
+                ],
+                "summary": "Listar Benefícios",
+                "description": "Lista Benefícios cadastrados na plataforma da Exmed",
+                "operationId": "getBeneficio",
+                "responses": {
+                    "200": {
+                        "description": "Retorna benefícios",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "500": {
+                        "description": "Ocorreu um erro inesperado ao listar os benefícios."
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Benefícios"
+                ],
+                "summary": "Cria Benefício",
+                "description": "Cria Benefício na plataforma da Exmed",
+                "operationId": "postBeneficio",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Beneficio"
+                            },
+                            "examples": {
+                                "beneficio": {
+                                    "value": {
+                                        "valor_beneficio": 38.2,
+                                        "nome_beneficio": "Desconto em Check-up Médico"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Benefício criado com sucesso.",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "500": {
+                        "description": "Ocorreu um erro inesperado ao criar o benefício."
+                    }
+                }
+            }
+        },
+        "/beneficio/{id_beneficio}": {
+            "put": {
+                "tags": [
+                    "Benefícios"
+                ],
+                "summary": "Edita benefício pelo Id",
+                "description": "Edita benefício pelo Id cadastrados na plataforma da Exmed",
+                "operationId": "putBeneficioPeloId",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Beneficio"
+                            },
+                            "examples": {
+                                "beneficio": {
+                                    "value": {
+                                        "valor_beneficio": 38.2,
+                                        "nome_beneficio": "Desconto em Check-up Médico"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Benefício atualizado com sucesso.",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "500": {
+                        "description": "Ocorreu um erro inesperado ao atualizar o benefício."
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id_beneficio",
+                        "in": "path",
+                        "description": "Edita Benefício pelo Id",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        }
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Benefícios"
+                ],
+                "summary": "Deleta benefício pelo Id",
+                "description": "Deleta benefício pelo Id cadastrado na plataforma da Exmed",
+                "operationId": "deleteBeneficioPeloId",
+                "responses": {
+                    "200": {
+                        "description": "Benefício excluído com sucesso.",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "500": {
+                        "description": "Ocorreu um erro inesperado ao excluir o benefício."
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id_beneficio",
+                        "in": "path",
+                        "description": "Deleta benefício pelo Id",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "/contratar-beneficio": {
+            "post": {
+                "tags": [
+                    "Benefícios"
+                ],
+                "summary": "Contrata benefício",
+                "description": "Usuário contrata benefício na plataforma da Exmed",
+                "operationId": "postContratarBeneficio",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ContratarBeneficio"
+                            },
+                            "examples": {
+                                "beneficio": {
+                                    "value": {
+                                        "id_usuario": "3c121c40-c2ee-4172-a5c4-c45a78dec5ef",
+                                        "id_beneficio": 4
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Benefício contratado e cupom gerado com sucesso.",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "400": {
+                        "description": "Usuário não encontrado."
+                    },
+                    "404": {
+                        "description": "Benefício não encontrado."
+                    },
+                    "406": {
+                        "description": "Saldo insuficiente.'"
+                    },
+                    "500": {
+                        "description": "Ocorreu um erro inesperado ao contratar o benefício.",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Usuario": {
+                "type": "object",
+                "properties": {
+                    "cpf": {
+                        "type": "string"
+                    },
+                    "telefone": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "data_nascimento": {
+                        "type": "string"
+                    },
+                    "nome_completo": {
+                        "type": "string"
+                    },
+                    "nome_plano": {
+                        "type": "string"
+                    },
+                    "logradouro": {
+                        "type": "string"
+                    },
+                    "numero": {
+                        "type": "number"
+                    },
+                    "complemento": {
+                        "type": "string"
+                    },
+                    "codigo_indicacao_origem": {
+                        "type": "string"
+                    }
+                }
+            },
+            "EditaUsuario": {
+                "type": "object",
+                "properties": {
+                    "telefone": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "nome_completo": {
+                        "type": "string"
+                    },
+                    "logradouro": {
+                        "type": "string"
+                    },
+                    "numero": {
+                        "type": "number"
+                    },
+                    "complemento": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AtualizarPlanoUsuario": {
+                "type": "object",
+                "properties": {
+                    "id_servico": {
+                        "type": "number"
+                    }
+                }
+            },
+            "Servico": {
+                "type": "object",
+                "properties": {
+                    "nome_plano": {
+                        "type": "string"
+                    },
+                    "descricao": {
+                        "type": "string"
+                    },
+                    "valor_do_servico": {
+                        "type": "number"
+                    }
+                }
+            },
+            "Beneficio": {
+                "type": "object",
+                "properties": {
+                    "valor_beneficio": {
+                        "type": "number"
+                    },
+                    "nome_beneficio": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ContratarBeneficio": {
+                "type": "object",
+                "properties": {
+                    "id_usuario": {
+                        "type": "string"
+                    },
+                    "id_beneficio": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}
