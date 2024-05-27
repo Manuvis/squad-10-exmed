@@ -32,7 +32,7 @@ export const criarUsuario = async (req: Request, res: Response) => {
             logradouro,
             numero,
             complemento,
-            codigo_indicacao_origem
+            codigo_indicacao_origem,
         } = req.body;
 
         const codigoIndicacaoPorCpf = uuidv4();
@@ -77,7 +77,7 @@ export const criarUsuario = async (req: Request, res: Response) => {
                 numero,
                 complemento,
                 codigo_indicacao_origem: codigoIndicacaoDeOrigem,
-                saldo: saldoInicial 
+                saldo: saldoInicial,
             });
 
             await trx('indicacao').insert({

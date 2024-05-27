@@ -1,5 +1,5 @@
 {
-    "openapi": "3.0.0",
+    "openapi": "3.0.1",
     "info": {
         "title": "API do Sistema de Indicações da Exmed",
         "summary": "Realizar a divulgação dos planos da Exmed",
@@ -14,6 +14,10 @@
         {
             "url": "http://localhost:3003/v1",
             "description": "API de test"
+        },
+        {
+            "url": "https://exmed-2gjqolc87-manuvis-projects.vercel.app/v1",
+            "description": "API de Produção"
         }
     ],
     "paths": {
@@ -721,5 +725,11 @@
                 }
             }
         }
+    },
+  "security": [
+    {
+      "JWT": []
     }
+  ]
 }
+
