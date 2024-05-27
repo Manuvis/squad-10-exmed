@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import knex from '../connection';
 import { v4 as uuidv4 } from 'uuid';
 
-// Criar Benefício
 export const criarBeneficio = async (req: Request, res: Response) => {
     try {
         const {valor_beneficio, nome_beneficio } = req.body;
@@ -19,7 +18,6 @@ export const criarBeneficio = async (req: Request, res: Response) => {
     }
 };
 
-// Listar Benefícios
 export const listarBeneficios = async (req: Request, res: Response) => {
     try {
         const beneficios = await knex('beneficio').select('*');
@@ -30,7 +28,6 @@ export const listarBeneficios = async (req: Request, res: Response) => {
     }
 };
 
-// Obter Benefício por ID
 export const obterBeneficioPorID = async (req: Request, res: Response) => {
     try {
         const { id_beneficio } = req.params;
@@ -47,7 +44,6 @@ export const obterBeneficioPorID = async (req: Request, res: Response) => {
     }
 };
 
-// Atualizar Benefício por ID
 export const atualizarBeneficioPorID = async (req: Request, res: Response) => {
     try {
         const { id_beneficio } = req.params;
@@ -69,7 +65,6 @@ const gerarCodigoCupom = () => {
     return uuidv4();
 };
 
-// Função para contratar um benefício e gerar cupons
 export const contratarBeneficio = async (req: Request, res: Response) => {
     try {
         const { id_usuario, id_beneficio } = req.body;
@@ -119,7 +114,6 @@ export const contratarBeneficio = async (req: Request, res: Response) => {
     }
 };
 
-// Excluir Benefício por ID
 export const excluirBeneficioPorID = async (req: Request, res: Response) => {
     try {
         const { id_beneficio } = req.params;

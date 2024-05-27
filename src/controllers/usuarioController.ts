@@ -19,7 +19,6 @@ const incrementarSaldoUsuarioIndicacao = async (codigoIndicacao: string) => {
     }
 };
 
-// Criar Usuário
 export const criarUsuario = async (req: Request, res: Response) => {
     try {
         const {
@@ -93,7 +92,6 @@ export const criarUsuario = async (req: Request, res: Response) => {
     }
 };
 
-// Listar Usuários
 export const listarUsuarios = async (req: Request, res: Response) => {
     try {
         const usuarios = await knex('usuario').select('*');
@@ -104,7 +102,6 @@ export const listarUsuarios = async (req: Request, res: Response) => {
     }
 };
 
-// Obter Usuário por ID
 export const obterUsuarioPorID = async (req: Request, res: Response) => {
     try {
         const { id_usuario } = req.params;
@@ -120,7 +117,7 @@ export const obterUsuarioPorID = async (req: Request, res: Response) => {
     }
 };
 
-// Atualizar Usuário por ID
+
 export const atualizarUsuarioPorID = async (req: Request, res: Response) => {
     try {
         const { id_usuario } = req.params;
@@ -149,7 +146,6 @@ export const atualizarUsuarioPorID = async (req: Request, res: Response) => {
     }
 };
 
-// Atualiza Plano Usuário
 export const atualizarPlanoUsuario = async (req: Request, res: Response) => {
     try {
         const { id_usuario } = req.params;
@@ -183,7 +179,6 @@ export const atualizarPlanoUsuario = async (req: Request, res: Response) => {
     }
 };
 
-// Excluir Usuário por ID
 export const excluirUsuarioPorID = async (req: Request, res: Response) => {
     try {
         const { id_usuario } = req.params;

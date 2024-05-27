@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import knex from '../connection';
 
-// Criar Serviço
 export const criarServico = async (req: Request, res: Response) => {
     try {
         const { nome_plano, descricao, valor_do_servico } = req.body;
@@ -24,7 +23,6 @@ export const criarServico = async (req: Request, res: Response) => {
     }
 };
 
-// Listar Serviços
 export const listarServicos = async (req: Request, res: Response) => {
     try {
         const servicos = await knex('servicos').select('*');
@@ -35,7 +33,6 @@ export const listarServicos = async (req: Request, res: Response) => {
     }
 };
 
-// Atualizar Serviço 
 export const atualizarServicoPorID = async (req: Request, res: Response) => {
     try {
         const { id_servico } = req.params;
@@ -54,7 +51,6 @@ export const atualizarServicoPorID = async (req: Request, res: Response) => {
     }
 };
 
-// Excluir Serviço 
 export const excluirServicoPorID = async (req: Request, res: Response) => {
     try {
         const { id_servico } = req.params;
