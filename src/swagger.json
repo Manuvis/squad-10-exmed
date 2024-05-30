@@ -21,7 +21,7 @@
         }
     ],
     "paths": {
-        "/usuarios": {
+        "/usuarios/signup": {
             "post": {
                 "tags": [
                     "Usuário"
@@ -47,7 +47,8 @@
                                         "nome_plano": 2,
                                         "logradouro": "Estrada do Encanamento",
                                         "numero": 123,
-                                        "complemento": "Casa F"
+                                        "complemento": "Casa F",
+                                        "senha": 123
                                     }
                                 }
                             }
