@@ -16,7 +16,7 @@
             "description": "API de test"
         },
         {
-            "url": "https://exmed-indicacoes.onrender.com/",
+            "url": "https://exmed-indicacoes.onrender.com/v1",
             "description": "API de Produção"
         }
     ],
