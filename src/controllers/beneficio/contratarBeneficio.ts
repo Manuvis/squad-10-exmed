@@ -9,19 +9,30 @@ const gerarCodigoCupom = () => {
 
 export const contratarBeneficio = async (req: Request, res: Response) => {
     try {
-        const token = req.headers.authorization;
-        if (!token) {
+        const authHeader = req.headers.authorization;
+
+        if (!authHeader) {
             return res.status(401).json({ message: 'Acesso não autorizado' });
         }
 
+        const token = authHeader.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ message: 'Token não fornecido ou malformado' });
+        }
+
         const auth = new Authenticator();
-        const tokenData = auth.getTokenData(token);
+        let tokenData;
+        try {
+            tokenData = auth.getTokenData(token);
+        } catch (error) {
+            return res.status(401).json({ message: 'Token inválido' });
+        }
 
         if (tokenData.tipo !== 'usuario') {
             return res.status(403).json({ message: 'Acesso negado' });
         }
-
         const idUsuarioLogado = tokenData.id_usuario;
+
         const { id_beneficio } = req.body;
 
         const usuario = await knex('usuario').where('id_usuario', idUsuarioLogado).first();
@@ -42,7 +53,7 @@ export const contratarBeneficio = async (req: Request, res: Response) => {
         
         await knex.transaction(async (trx) => {
             const [id_contratacao] = await trx('beneficios_contratados').insert({
-                idUsuarioLogado,
+                id_usuario: idUsuarioLogado,
                 id_beneficio,
                 valor_contratacao: beneficio.valor_beneficio
             }).returning('id_contratacao');

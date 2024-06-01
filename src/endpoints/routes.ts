@@ -24,14 +24,14 @@ import { obterBeneficioPorID } from '../controllers/beneficio/obterBeneficioPorI
 const router = Router();
 
 //Usuario
-router.post('/usuarios/signup', criarUsuario);
-router.post('/usuarios/login', loginUsuario);  
+router.post('/signup', criarUsuario);
+router.post('/login', loginUsuario);  
 router.get('/usuarios', listarUsuarios);
 router.get('/usuarios/cupons', listarCuponsUsuario);
 router.get('/usuarios/:id_usuario', obterUsuarioPorID);
 router.put('/usuarios/atualizar', atualizarUsuarioPorID);
 router.put('/usuario/:id_usuario/plano', atualizarPlanoUsuario);
-router.delete('/usuarios/:id_usuario', excluirUsuarioPorID);
+router.delete('/usuarios/excluir', excluirUsuarioPorID);
 
 //Serviço
 router.post('/servicos',criarServico);

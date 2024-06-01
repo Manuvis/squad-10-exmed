@@ -34,7 +34,7 @@ export const criarUsuario = async (req: Request, res: Response) => {
             complemento,
             codigo_indicacao_origem,
             senha,
-            tipo // Adicionado campo tipo
+            tipo 
         } = req.body;
 
         const codigoIndicacaoPorCpf = uuidv4();
@@ -83,7 +83,7 @@ export const criarUsuario = async (req: Request, res: Response) => {
                 codigo_indicacao_origem: codigoIndicacaoDeOrigem,
                 saldo: saldoInicial,
                 senha: senhaHash,
-                tipo // Salvar tipo no banco
+                tipo 
             });
 
             await trx('indicacao').insert({
@@ -93,7 +93,7 @@ export const criarUsuario = async (req: Request, res: Response) => {
         });
 
         const auth = new Authenticator();
-        const token = auth.generateToken({ id_usuario: userIdUsuario, tipo }); // Incluir tipo no token
+        const token = auth.generateToken({ id_usuario: userIdUsuario, tipo }); 
 
         res.status(201).json({ message: 'Usuário cadastrado com sucesso.', codigoIndicacaoPorCpf, token });
     } catch (error) {

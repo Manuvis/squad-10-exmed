@@ -4,17 +4,19 @@ import { Authenticator } from '../../services/midleware/Authenticator';
 
 export const listarUsuarios = async (req: Request, res: Response) => {
     try {
-        const token = req.headers.authorization;
-        if (!token) {
+        const authHeader  = req.headers.authorization;
+        if (!authHeader) {
             return res.status(401).json({ message: 'Acesso não autorizado' });
         }
+
+        const token = authHeader.split(' ')[1];
 
         const auth = new Authenticator();
         const tokenData = auth.getTokenData(token);
 
         if (tokenData.tipo !== 'adm') {
             return res.status(403).json({ message: 'Acesso negado' });
-        } 
+        }
         
         const usuarios = await knex('usuario').select('*');
         res.status(200).json(usuarios);

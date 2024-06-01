@@ -16,30 +16,30 @@
             "description": "API de test"
         },
         {
-            "url": "https://exmed-2gjqolc87-manuvis-projects.vercel.app/v1",
+            "url": "link",
             "description": "API de Produção"
         }
     ],
     "paths": {
-        "/usuarios/signup": {
+        "/signup": {
             "post": {
                 "tags": [
                     "Usuário"
                 ],
                 "summary": "Cadastro do usuário",
                 "description": "Cadastra o usuário na plataforma da Exmed",
-                "operationId": "postUsuario",
+                "operationId": "postSingupUsuario",
                 "requestBody": {
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Usuario"
+                                "$ref": "#/components/schemas/SingupUsuario"
                             },
                             "examples": {
-                                "usuario": {
+                                "singup": {
                                     "value": {
                                         "cpf": "765.432.109-25",
-                                        "telefone": "(41) 99999-9999",
+                                        "telefone": "(81) 99999-9999",
                                         "email": "renee@gmail.com",
                                         "data_nascimento": "1970-09-23",
                                         "codigo_indicacao_origem": "f93cd4d9-8f40-4579-8150-46ab4d5ab1e3",
@@ -48,7 +48,8 @@
                                         "logradouro": "Estrada do Encanamento",
                                         "numero": 123,
                                         "complemento": "Casa F",
-                                        "senha": 123
+                                        "senha": "123",
+                                        "tipo": "usuario"
                                     }
                                 }
                             }
@@ -72,10 +73,61 @@
                         "description": "Ocorreu um erro inesperado ao cadastrar o usuário."
                     }
                 }
-            },
+            }
+        },
+        "/login": {
+            "post": {
+                "tags": [
+                    "Usuário"
+                ],
+                "summary": "Login do usuário",
+                "description": "Realiza o Login do usuário na plataforma da Exmed",
+                "operationId": "postLoginUsuario",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Login"
+                            },
+                            "examples": {
+                                "login": {
+                                    "value": {
+                                        "email": "renee@gmail.com",
+                                        "senha": "123"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Email não existe! Ou Por favor, preencha os campos 'email' e 'senha'"
+                    },
+                    "401": {
+                        "description": "Credenciais inválidas"
+                    },
+                    "200": {
+                        "description": "Login realizado",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "500": {
+                        "description": "Ocorreu um erro inesperado ao tentar fazer login."
+                    }
+                }
+            }
+        },
+        "/usuarios": {
             "get": {
                 "tags": [
                     "Usuário"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
                 ],
                 "summary": "Lista todos os usuários",
                 "description": "Lista todos os usuários cadastrados na plataforma da Exmed",
@@ -93,10 +145,44 @@
                 }
             }
         },
+        "/usuarios/cupons": {
+            "get": {
+                "tags": [
+                    "Usuário"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Obter cupons do usuário pelo seu Id",
+                "description": "Obter cupons do usuário cadastrados na plataforma da Exmed",
+                "operationId": "getCuponsUsuario",
+                "responses": {
+                    "200": {
+                        "description": "Retorna usuário",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado."
+                    },
+                    "500": {
+                        "description": "Ocorreu um erro inesperado ao listar o usuário."
+                    }
+                }
+            }
+        },
         "/usuarios/{id_usuario}": {
             "get": {
                 "tags": [
                     "Usuário"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
                 ],
                 "summary": "Obter usuários por Id",
                 "description": "Obter usuários por Id cadastrados na plataforma da Exmed",
@@ -129,10 +215,17 @@
                         }
                     }
                 ]
-            },
+            }
+        },
+        "/usuarios/atualizar":{
             "put": {
                 "tags": [
                     "Usuário"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
                 ],
                 "summary": "Edita/Atualiza usuário pelo Id",
                 "description": "Edita/Atualiza usuário pelo Id cadastrado na plataforma da Exmed",
@@ -159,6 +252,12 @@
                     }
                 },
                 "responses": {
+                    "401": {
+                        "description": "Acesso não autorizado, Token não fornecido ou malformado ou Token inválido."
+                    },
+                    "403":{
+                        "description": "Acesso negado"
+                    },
                     "200": {
                         "description": "Usuário atualizado com sucesso.",
                         "content": {
@@ -168,63 +267,18 @@
                     "500": {
                         "description": "Ocorreu um erro inesperado ao atualizar o usuário."
                     }
-                },
-                "parameters": [
-                    {
-                        "name": "id_usuario",
-                        "in": "path",
-                        "description": "Edita/Atualiza Usuário pelo Id",
-                        "required": true,
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                ]
-            },
-            "delete": {
-                "tags": [
-                    "Usuário"
-                ],
-                "summary": "Deleta usuário pelo Id",
-                "description": "Deleta usuário pelo Id cadastrado na plataforma da Exmed",
-                "operationId": "deleteUsuarioPeloId",
-                "responses": {
-                    "200": {
-                        "description": "Usuário excluído com sucesso.",
-                        "content": {
-                            "application/json": {}
-                        }
-                    },
-                    "404": {
-                        "description": "Usuário não encontrado."
-                    },
-                    "500": {
-                        "description": "Ocorreu um erro inesperado ao excluir o usuário."
-                    }
-                },
-                "parameters": [
-                    {
-                        "name": "id_usuario",
-                        "in": "path",
-                        "description": "Deleta Usuário pelo Id",
-                        "required": true,
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                ]
+                }
             }
         },
         "/usuario/{id_usuario}/plano": {
             "put": {
                 "tags": [
                     "Usuário"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
                 ],
                 "summary": "Atualiza o plano do usuário, pelo seu Id do usuário",
                 "description": "Atualizar o plano do usuário cadastrado na plataforma da Exmed",
@@ -278,6 +332,35 @@
                 ]
             }
         },
+        "/usuarios/excluir":{
+            "delete": {
+                "tags": [
+                    "Usuário"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Deleta usuário a partir do seu ID",
+                "description": "Deleta usuário pelo Id cadastrado na plataforma da Exmed",
+                "operationId": "deleteUsuarioPeloId",
+                "responses": {
+                    "200": {
+                        "description": "Usuário excluído com sucesso.",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado."
+                    },
+                    "500": {
+                        "description": "Ocorreu um erro inesperado ao excluir o usuário."
+                    }
+                }
+            }
+        },
         "/servicos": {
             "get": {
                 "tags": [
@@ -301,6 +384,11 @@
             "post": {
                 "tags": [
                     "Serviços"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
                 ],
                 "summary": "Adiciona serviço",
                 "description": "Adiciona serviço na plataforma da Exmed",
@@ -343,6 +431,11 @@
             "put": {
                 "tags": [
                     "Serviços"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
                 ],
                 "summary": "Edita serviço pelo Id",
                 "description": "Edita serviço pelo Id cadastrados na plataforma da Exmed",
@@ -394,6 +487,11 @@
             "delete": {
                 "tags": [
                     "Serviços"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
                 ],
                 "summary": "Deleta serviço pelo Id",
                 "description": "Deleta serviço pelo Id cadastrado na plataforma da Exmed",
@@ -452,6 +550,11 @@
                 "tags": [
                     "Benefícios"
                 ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "summary": "Cria Benefício",
                 "description": "Cria Benefício na plataforma da Exmed",
                 "operationId": "postBeneficio",
@@ -484,11 +587,70 @@
                     }
                 }
             }
+        },        
+        "/contratar-beneficio": {
+            "post": {
+                "tags": [
+                    "Benefícios"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Contrata benefício",
+                "description": "Usuário contrata benefício na plataforma da Exmed",
+                "operationId": "postContratarBeneficio",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ContratarBeneficio"
+                            },
+                            "examples": {
+                                "beneficio": {
+                                    "value": {
+                                        "id_beneficio": 4
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Benefício contratado e cupom gerado com sucesso.",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "400": {
+                        "description": "Usuário não encontrado."
+                    },
+                    "404": {
+                        "description": "Benefício não encontrado."
+                    },
+                    "406": {
+                        "description": "Saldo insuficiente.'"
+                    },
+                    "500": {
+                        "description": "Ocorreu um erro inesperado ao contratar o benefício.",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
         },
         "/beneficio/{id_beneficio}": {
             "put": {
                 "tags": [
                     "Benefícios"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
                 ],
                 "summary": "Edita benefício pelo Id",
                 "description": "Edita benefício pelo Id cadastrados na plataforma da Exmed",
@@ -540,6 +702,11 @@
                 "tags": [
                     "Benefícios"
                 ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "summary": "Deleta benefício pelo Id",
                 "description": "Deleta benefício pelo Id cadastrado na plataforma da Exmed",
                 "operationId": "deleteBeneficioPeloId",
@@ -569,61 +736,12 @@
                     }
                 ]
             }
-        },
-        "/contratar-beneficio": {
-            "post": {
-                "tags": [
-                    "Benefícios"
-                ],
-                "summary": "Contrata benefício",
-                "description": "Usuário contrata benefício na plataforma da Exmed",
-                "operationId": "postContratarBeneficio",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/ContratarBeneficio"
-                            },
-                            "examples": {
-                                "beneficio": {
-                                    "value": {
-                                        "id_usuario": "3c121c40-c2ee-4172-a5c4-c45a78dec5ef",
-                                        "id_beneficio": 4
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Benefício contratado e cupom gerado com sucesso.",
-                        "content": {
-                            "application/json": {}
-                        }
-                    },
-                    "400": {
-                        "description": "Usuário não encontrado."
-                    },
-                    "404": {
-                        "description": "Benefício não encontrado."
-                    },
-                    "406": {
-                        "description": "Saldo insuficiente.'"
-                    },
-                    "500": {
-                        "description": "Ocorreu um erro inesperado ao contratar o benefício.",
-                        "content": {
-                            "application/json": {}
-                        }
-                    }
-                }
-            }
         }
+
     },
     "components": {
         "schemas": {
-            "Usuario": {
+            "SingupUsuario": {
                 "type": "object",
                 "properties": {
                     "cpf": {
@@ -654,6 +772,23 @@
                         "type": "string"
                     },
                     "codigo_indicacao_origem": {
+                        "type": "string"
+                    },
+                    "senha": {
+                        "type": "string"
+                    },
+                    "tipo": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Login": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "senha": {
                         "type": "string"
                     }
                 }
@@ -725,12 +860,13 @@
                     }
                 }
             }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
         }
-    },
-  "security": [
-    {
-      "JWT": []
     }
-  ]
 }
-
