@@ -7,6 +7,7 @@ import { criarUsuario } from '../controllers/usuário/criarUsuario';
 import { listarUsuarios } from '../controllers/usuário/listarUsuarios';
 import { obterUsuarioPorID } from '../controllers/usuário/obterUsuarioPorID';
 import { loginUsuario } from '../controllers/usuário/loginUsuario';
+import { listarCuponsUsuario } from '../controllers/usuário/listarCuponsUsuario';
 
 import { criarServico } from '../controllers/planos/criarServico';
 import { atualizarServicoPorID } from '../controllers/planos/atualizarServicoPorID';
@@ -26,8 +27,9 @@ const router = Router();
 router.post('/usuarios/signup', criarUsuario);
 router.post('/usuarios/login', loginUsuario);  
 router.get('/usuarios', listarUsuarios);
+router.get('/usuarios/cupons', listarCuponsUsuario);
 router.get('/usuarios/:id_usuario', obterUsuarioPorID);
-router.put('/usuarios/:id_usuario', atualizarUsuarioPorID);
+router.put('/usuarios/atualizar', atualizarUsuarioPorID);
 router.put('/usuario/:id_usuario/plano', atualizarPlanoUsuario);
 router.delete('/usuarios/:id_usuario', excluirUsuarioPorID);
 

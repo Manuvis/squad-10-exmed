@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import knex from '../../connection';
 import { v4 as uuidv4 } from 'uuid';
+import { Authenticator } from '../../services/midleware/Authenticator';
 
 const gerarCodigoCupom = () => {
     return uuidv4();
@@ -8,9 +9,22 @@ const gerarCodigoCupom = () => {
 
 export const contratarBeneficio = async (req: Request, res: Response) => {
     try {
-        const { id_usuario, id_beneficio } = req.body;
+        const token = req.headers.authorization;
+        if (!token) {
+            return res.status(401).json({ message: 'Acesso não autorizado' });
+        }
 
-        const usuario = await knex('usuario').where('id_usuario', id_usuario).first();
+        const auth = new Authenticator();
+        const tokenData = auth.getTokenData(token);
+
+        if (tokenData.tipo !== 'usuario') {
+            return res.status(403).json({ message: 'Acesso negado' });
+        }
+
+        const idUsuarioLogado = tokenData.id_usuario;
+        const { id_beneficio } = req.body;
+
+        const usuario = await knex('usuario').where('id_usuario', idUsuarioLogado).first();
         if (!usuario) {
             return res.status(400).json({ message: 'Usuário não encontrado.' });
         }
@@ -28,7 +42,7 @@ export const contratarBeneficio = async (req: Request, res: Response) => {
         
         await knex.transaction(async (trx) => {
             const [id_contratacao] = await trx('beneficios_contratados').insert({
-                id_usuario,
+                idUsuarioLogado,
                 id_beneficio,
                 valor_contratacao: beneficio.valor_beneficio
             }).returning('id_contratacao');
@@ -43,7 +57,7 @@ export const contratarBeneficio = async (req: Request, res: Response) => {
                 validade
             });
 
-            await trx('usuario').where('id_usuario', id_usuario).update({
+            await trx('usuario').where('id_usuario', idUsuarioLogado).update({
                 saldo: usuario.saldo - beneficio.valor_beneficio
             });
         });

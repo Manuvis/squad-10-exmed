@@ -25,6 +25,8 @@ export const excluirUsuarioPorID = async (req: Request, res: Response) => {
 
         await knex('indicacao').where('cpf_usuario', usuarioExistente.cpf).del();
 
+        await knex('beneficios_contratados').where('id_usuario', usuarioExistente.id_usuario).del();
+
         await knex('usuario').where('id_usuario', id_usuario).del();
 
         res.status(200).json({ message: 'Usuário excluído com sucesso.' });

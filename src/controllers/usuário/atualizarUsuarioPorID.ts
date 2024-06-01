@@ -12,11 +12,12 @@ export const atualizarUsuarioPorID = async (req: Request, res: Response) => {
         const auth = new Authenticator();
         const tokenData = auth.getTokenData(token);
 
-        if (tokenData.tipo !== 'adm') {
+        if (tokenData.tipo !== 'usuario') {
             return res.status(403).json({ message: 'Acesso negado' });
         }
+
+        const idUsuarioLogado = tokenData.id_usuario 
         
-        const { id_usuario } = req.params;
         const {
             telefone,
             email,
@@ -26,7 +27,7 @@ export const atualizarUsuarioPorID = async (req: Request, res: Response) => {
             complemento
         } = req.body;
 
-        await knex('usuario').where('id_usuario', id_usuario).update({
+        await knex('usuario').where('id_usuario', idUsuarioLogado).update({
             telefone,
             email,
             nome_completo,
