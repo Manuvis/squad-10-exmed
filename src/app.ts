@@ -4,7 +4,7 @@ import { router } from "./endpoints/routes";
 
 const app: Express = express();
 const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./swagger.json');
+const swaggerDocument = require('../swagger.json');
 
 app.use(express.json());
 app.use(cors());
