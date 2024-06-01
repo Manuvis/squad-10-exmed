@@ -1,6 +1,9 @@
 import { AuthenticationData } from "../../types/AuthenticationData";
 import * as jwt from "jsonwebtoken";
 import * as bcrypt from "bcryptjs";
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const SECRET_KEY = "meuSegredo"; 
 
